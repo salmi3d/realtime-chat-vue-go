@@ -11,6 +11,8 @@ import Header from './components/Header.vue'
 import Chat from './components/Chat.vue'
 import InputBox from './components/InputBox.vue'
 
+import { connect, sendMsg } from './api.js'
+
 export default {
   name: 'app',
   data() {
@@ -23,9 +25,18 @@ export default {
     Chat,
     InputBox,
   },
+  mounted() {
+    connect(msg => {
+      this.messages.push(JSON.parse(msg.data))
+    })
+  },
   methods: {
     send(event) {
-      alert(event.target.value)
+      if (event.target.value.trim() === "") {
+        return
+      }
+      sendMsg(event.target.value)
+      event.target.value = ""
     }
   }
 }
