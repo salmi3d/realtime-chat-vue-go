@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #496294;
+  color: white;
+  max-width: 100%;
+  padding: 10px;
+  &__title {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+}
