@@ -24,15 +24,30 @@ body {
 .chat {
   background-color: #eee;
   padding: 20px;
+  &__entry {
+
+    color: #000;
+
+    display: flex;
+    align-items: center;
+  }
+  &__person {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   &__message {
+    flex: 1;
     background-color: white;
-    margin: 10px auto;
     box-shadow: 0 5px 15px -5px rgba(0,0,0,.2);
+    margin: 10px;
     padding: 10px 20px;
     border-radius: 5px;
-    clear:both;
     &_me {
-      color: #EFFDDE;
       background-color: #EFFDDE;
     }
   }

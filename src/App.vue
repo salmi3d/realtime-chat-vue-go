@@ -26,15 +26,22 @@ export default {
     InputBox,
   },
   mounted() {
-    connect(msg => {
+    let name = prompt("What's your name fella?")
+    connect(name, msg => {
       this.messages.push(JSON.parse(msg.data))
     })
   },
   methods: {
     send(event) {
-      if (event.target.value.trim() === "") {
+      let msg = event.target.value.trim()
+      if (msg === "") {
         return
       }
+      this.messages.push({
+        author: 'You',
+        isMe: true,
+        body: msg
+      })
       sendMsg(event.target.value)
       event.target.value = ""
     }
