@@ -28,19 +28,23 @@ export default {
   mounted() {
     let name = prompt("What's your name fella?")
     connect(name, msg => {
-      this.messages.push(JSON.parse(msg.data))
+      this.messages.push({
+        ...JSON.parse(msg.data),
+        time: new Date().toLocaleString()
+      })
     })
   },
   methods: {
     send(event) {
-      let msg = event.target.value.trim()
-      if (msg === "") {
+      let text = event.target.value.trim()
+      if (text === "") {
         return
       }
       this.messages.push({
         author: 'You',
         isMe: true,
-        body: msg
+        text: text,
+        time: new Date().toLocaleString()
       })
       sendMsg(event.target.value)
       event.target.value = ""
