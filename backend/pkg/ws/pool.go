@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -20,32 +21,27 @@ func NewPool() *Pool {
 
 func (pool *Pool) registerUser(client *Client) {
 	pool.Clients[client.ID] = client
-	pool.trackUser(client, "New User Joined...")
+	pool.trackUser(client, "+")
 }
 
 func (pool *Pool) unregisterUser(client *Client) {
 	if err := client.Connection.Close(); err != nil {
 		log.Println(err)
 	}
-	delete(pool.Clients, client.ID)
-	pool.trackUser(client, "User Disconnected...")
+	pool.trackUser(client, "-")
 }
 
 func (pool *Pool) trackUser(client *Client, str string) {
-	log.Println("Connected clients: ", len(pool.Clients))
-
-	// var dat map[string]interface{}
-	// if err := json.Unmarshal([]byte(str), &dat); err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// fmt.Println("---", dat["type"])
-
-	msg := Message{
-		ClientID: client.ID,
-		Body:     str,
+	log.Printf("Connected clients: %d\n", len(pool.Clients))
+	var msgBody, msgType string
+	if str == "+" {
+		msgBody = fmt.Sprintf("%s joined...", client.Name)
+	} else if str == "-" {
+		msgBody = fmt.Sprintf("%s disconnected...", client.Name)
+		msgType = "unregister"
 	}
-	pool.Broadcast <- msg
+	message := Message{ClientID: client.ID, Type: msgType, Body: msgBody}
+	pool.Broadcast <- message
 }
 
 // Discover ...
@@ -54,13 +50,19 @@ func (pool *Pool) Discover() {
 		select {
 		case message := <-pool.Broadcast:
 			log.Println("Broadcasting:", message)
+			author := pool.Clients[message.ClientID].Name
+			if message.Type == "unregister" {
+				delete(pool.Clients, message.ClientID)
+			}
 			for _, client := range pool.Clients {
 				if message.ClientID == client.ID {
 					continue
 				}
-				if err := client.Connection.WriteJSON(message); err != nil {
+				response := map[string]string{"author": author, "text": message.Body}
+				err := client.Connection.WriteJSON(response)
+				if err != nil {
 					log.Println(err)
-					return
+					continue
 				}
 			}
 		}

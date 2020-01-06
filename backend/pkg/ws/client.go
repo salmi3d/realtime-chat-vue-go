@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -11,6 +12,7 @@ import (
 // Client ...
 type Client struct {
 	ID         string
+	Name       string
 	Connection *websocket.Conn
 	Pool       *Pool
 }
@@ -18,7 +20,8 @@ type Client struct {
 // Message ...
 type Message struct {
 	ClientID string
-	Body     string `json:"body"`
+	Type     string
+	Body     string
 }
 
 func (client *Client) Read() {
@@ -35,7 +38,6 @@ func (client *Client) Read() {
 
 		message := Message{ClientID: client.ID, Body: string(p)}
 		client.Pool.Broadcast <- message
-		log.Printf("New message: %+v\n", message)
 	}
 }
 
@@ -53,8 +55,17 @@ func NewClient(pool *Pool, w http.ResponseWriter, r *http.Request) (*Client, err
 		return nil, err
 	}
 
+	name, ok := r.URL.Query()["name"]
+
+	if !ok || len(name[0]) < 1 {
+		return nil, errors.New("Url Param 'name' is missing")
+	}
+
+	clientName := name[0]
+
 	client := &Client{
 		ID:         uuid.New().String(),
+		Name:       clientName,
 		Connection: conn,
 		Pool:       pool,
 	}
