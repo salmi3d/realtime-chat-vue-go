@@ -1,10 +1,21 @@
-# realtime-chat-vue-go
+# Realtime chat
+Simple web chat application written with Vue (frontend) and Go (backend).
 
-## Project setup
+## Backend
+Chat requires a working Go development environment. The [Getting Started](http://golang.org/doc/install) page describes how to install the development environment.
 ```
+cd <project-folder>/backend
+go run main.go
+```
+
+## Frontend
+
+### Setup
+```
+cd <project-folder>
 yarn install
 ```
-
+  
 ### Compiles and hot-reloads for development
 ```
 yarn serve
@@ -15,10 +26,4 @@ yarn serve
 yarn build
 ```
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+To use the chat example, open [http://localhost:8080/](http://localhost:8080/) in your browser
