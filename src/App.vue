@@ -26,7 +26,14 @@ export default {
     InputBox,
   },
   mounted() {
-    let name = prompt("What's your name fella?")
+    let name = ''
+    do {
+      name = prompt("What's your name fella?", name)
+      if(name === null || name.trim() === '') {
+        name = ''
+      }
+    }
+    while(name === '')
     connect(name, msg => {
       this.messages.push({
         ...JSON.parse(msg.data),
@@ -37,7 +44,7 @@ export default {
   methods: {
     send(event) {
       let text = event.target.value.trim()
-      if (text === "") {
+      if (text === '') {
         return
       }
       this.messages.push({
@@ -47,7 +54,7 @@ export default {
         time: new Date().toLocaleString()
       })
       sendMsg(event.target.value)
-      event.target.value = ""
+      event.target.value = ''
     }
   }
 }

@@ -32,7 +32,6 @@ func (pool *Pool) unregisterUser(client *Client) {
 }
 
 func (pool *Pool) trackUser(client *Client, str string) {
-	log.Printf("Connected clients: %d\n", len(pool.Clients))
 	var msgBody, msgType string
 	if str == "+" {
 		msgBody = fmt.Sprintf("%s joined...", client.Name)
