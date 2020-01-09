@@ -8,6 +8,13 @@ cd <project-folder>/backend
 go run main.go
 ```
 
+### Dockerize backend
+```
+cd <project-folder>/backend
+docker build -t backend .
+docker run -it -p 4444:4444 backend
+```
+
 ## Frontend
 
 ### Setup
