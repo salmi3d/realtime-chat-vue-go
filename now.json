@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "name": "realtime-chat-vue-go",
+    "builds": [
+      { "src": "dist/**/*", "use": "@now/static" },
+      { "src": "backend/**/*.go", "use": "@now/go" }
+    ],
+    "rewrites": [
+      { "source": "/api/(.*)", "destination": "backend/index.go" },
+      { "source": "/(.*)", "destination": "dist/$1" }
+    ],
+    "env": {
+
+    }
+  }
